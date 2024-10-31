@@ -121,4 +121,30 @@ plt.legend(loc='upper left')
 
 plt.tight_layout()
 plt.show()
+--------------------------------------------------------------------------------------------------------
+# Load the best model weights
+model.load_weights('best_model.keras')
+--------------------------------------------------------------------------------------------------------
+from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
+
+# Reset the validation generator to ensure predictions start from the beginning
+val_generator.reset()
+
+# Predict on the validation set
+y_pred_prob = model.predict(val_generator)
+y_pred = np.round(y_pred_prob).astype(int).flatten()  # Convert probabilities to binary predictions (0 or 1)
+
+# True labels from the validation set
+y_true = val_generator.classes
+
+# Generate classification report
+report = classification_report(y_true, y_pred, target_names=val_generator.class_indices.keys())
+print("Classification Report:")
+print(report)
+
+# Confusion Matrix for additional insights
+conf_matrix = confusion_matrix(y_true, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
